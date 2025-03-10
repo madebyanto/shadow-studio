@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Signup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Caricamento delle versioni compatibili di Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script>
+        // Configurazione di Firebase
+        const firebaseConfig = {
+         apiKey: "AIzaSyBSVDsdQ603kAMOJx2noSDfYORWEPNq0d8",
+         authDomain: "shadowid.firebaseapp.com",
+         projectId: "shadowid",
+         storageBucket: "shadowid.firebasestorage.app",
+        messagingSenderId: "728527776970",
+        appId: "1:728527776970:web:04019bc535a8144cb65833",
+        measurementId: "G-61EJ7REF8B"
+        };
+        // Inizializzazione di Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Abilita la persistenza dell'autenticazione
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                console.log("Persistenza dell'autenticazione attivata.");
+            })
+            .catch((error) => {
+                console.error("Errore nella persistenza dell'autenticazione:", error.message);
+            });
+
+        // Controlla se l'utente è già autenticato
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log("Utente già loggato:", user.email);
+                window.location.href = "dashboard.html";
+            }
+        });
+    </script>
+    <style>
+        body {
+            font-family: Poppins, sans-serif;
+            background-color: #1b0b3a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        h2, h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #f174ff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #e008f6;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .login-link a {
+            color: #f174ff;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Modulo di Login -->
+        <img src="shadowstudio.png" alt="Shadow Studio" class="logo">
+        <h1>Il tuo profilo Shadow</h1>
+        <h2>Accedi</h2>
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button type="submit">Accedi</button>
+        </form>
+
+        <!-- Modulo di Registrazione -->
+        <h2>Registrati</h2>
+        <form id="signup-form">
+            <input type="email" id="signup-email" placeholder="Email" required>
+            <input type="password" id="signup-password" placeholder="Password" required>
+            <button type="submit">Registrati</button>
+        </form>
+
+        <div class="login-link">
+            <p>Ci teniamo alla tua <a href="https://jpst.it/4bwNu">privacy</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Funzione per il login
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    console.log("Login avvenuto con successo", userCredential);
+                    alert("Benvenuto, " + userCredential.user.email);
+                    window.location.href = "dashboard.html";
+                })
+                .catch((error) => {
+                    console.error("Errore nel login", error.message);
+                    alert("Errore: " + error.message);
+                });
+        });
+
+        // Funzione per la registrazione
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    console.log("Registrazione avvenuta con successo", userCredential);
+                    alert("Registrato con successo, " + userCredential.user.email);
+                    window.location.href = "dashboard.html";
+                })
+                .catch((error) => {
+                    console.error("Errore nella registrazione", error.message);
+                    alert("Errore: " + error.message);
+                });
+        });
+    </script>
+
+</body>
+</html>
