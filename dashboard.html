@@ -6,6 +6,8 @@
     <title>Shadow Studio - Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <style>
         * {
             margin: 0;
@@ -15,7 +17,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1b0b3a, #4a1c65);
+            background: linear-gradient(135deg, #1b0b3a, #3a1b5c);
             color: #fff;
             text-align: center;
             padding: 20px;
@@ -30,14 +32,6 @@
             font-size: 2.5em;
             margin-bottom: 10px;
             font-weight: 600;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        header p {
-            font-size: 1.2em;
-            font-weight: 300;
-            margin-bottom: 30px;
-            animation: fadeIn 1.2s ease-in-out;
         }
 
         .buttons {
@@ -64,21 +58,6 @@
             box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .widget::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.3);
-            transition: left 0.4s ease;
-        }
-
-        .widget:hover::after {
-            left: 100%;
-        }
-
         .widget h2 {
             font-size: 1.5em;
             margin-bottom: 5px;
@@ -89,50 +68,57 @@
             font-size: 1em;
             font-weight: 300;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Benvenuto su Shadow Studio</h1>
-            <p>Esplora le ultime novità e i contenuti esclusivi!</p>
         </header>
         <div class="buttons">
-             <div class="widget">
-                <h2>Il mio Account</h2>
-                <p>Email: <span id="user-email">Caricamento...</span></p>
-                <p>UID: <span id="user-uid">Caricamento...</span></p>
+            <div class="widget">
+                <h2>Il tuo account</h2>
+                <p id="user-email">Email: --</p>
+                <p id="user-uid">UID: --</p>
             </div>
             <div class="widget" onclick="location.href='news.html'">
                 <h2>News</h2>
-                <p>Scopri le ultime novità del mondo cinematografico.</p>
+                <p>Leggi le ultime novità.</p>
             </div>
             <div class="widget" onclick="location.href='https://www.tiktok.com/@fedeking.pictures'">
                 <h2>TikTok</h2>
-                <p>Guarda i nostri video su TikTok.</p>
+                <p>Guarda i nostri contenuti su TikTok.</p>
             </div>
             <div class="widget" onclick="location.href='https://www.youtube.com/@shadowstudio-official'">
                 <h2>YouTube</h2>
-                <p>Segui i nostri contenuti su YouTube.</p>
+                <p>Segui i nostri video su YouTube.</p>
             </div>
         </div>
     </div>
+
     <script>
-        // Simulazione di caricamento dati utente (da Firebase o altro backend)
-        $(document).ready(function() {
-            // Simulazione dati utente (sostituisci con autenticazione reale)
-            let user = {
-                email: "utente@example.com",
-                uid: "123456789"
-            };
-            
-            $("#user-email").text(user.email);
-            $("#user-uid").text(user.uid);
+        // Configurazione Firebase
+        const firebaseConfig = {
+           apiKey: "AIzaSyBSVDsdQ603kAMOJx2noSDfYORWEPNq0d8",
+           authDomain: "shadowid.firebaseapp.com",
+           projectId: "shadowid",
+           storageBucket: "shadowid.firebasestorage.app",
+           messagingSenderId: "728527776970",
+           appId: "1:728527776970:web:04019bc535a8144cb65833",
+           measurementId: "G-61EJ7REF8B"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        
+        // Recupera l'utente autenticato
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('user-email').innerText = `Email: ${user.email}`;
+                document.getElementById('user-uid').innerText = `UID: ${user.uid}`;
+            } else {
+                location.href = 'login.html'; // Reindirizza se non autenticato
+            }
         });
     </script>
 </body>
